@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test
-        run: swift test --enable-code-coverage --parallel
+        run: swift test --enable-code-coverage
       - name: Coverage gate (≥ 80 % lines)
         run: |
           PROFILE=$(dirname "$(swift test --show-codecov-path)")/default.profdata
