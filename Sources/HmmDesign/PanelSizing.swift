@@ -1,3 +1,6 @@
+#if canImport(CoreGraphics)
+    import CoreGraphics
+#endif
 import Foundation
 
 /// The size a person gave a panel by dragging its corner, remembered per panel on this device.

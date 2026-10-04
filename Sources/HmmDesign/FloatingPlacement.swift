@@ -1,3 +1,6 @@
+#if canImport(CoreGraphics)
+    import CoreGraphics
+#endif
 import Foundation
 
 /// Which side of a target a floating panel sits on, in screen space (left and right as the glass shows them).
