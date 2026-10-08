@@ -24,6 +24,7 @@ let package = Package(
         .library(name: "HmmDiagnostics", targets: ["HmmDiagnostics"]),
         .library(name: "HmmStore", targets: ["HmmStore"]),
         .library(name: "HmmBrush", targets: ["HmmBrush"]),
+        .library(name: "HmmBoard", targets: ["HmmBoard"]),
         .library(name: "HmmBrushRender", targets: ["HmmBrushRender"])
     ],
     targets: [
@@ -39,6 +40,8 @@ let package = Package(
         .target(name: "HmmStore"),
         // The brush engine's arithmetic: brushes, strokes into stamps, the built-in tips and grains.
         .target(name: "HmmBrush", dependencies: ["HmmDocuments"]),
+        // The Schizzo board's model: items, commands, the view, the board on disk.
+        .target(name: "HmmBoard", dependencies: ["HmmBrush", "HmmCommands", "HmmDocuments"]),
         // The brush engine on the GPU (Metal): the stamp shader, the stamper, tip and grain textures.
         .target(name: "HmmBrushRender", dependencies: ["HmmBrush"], resources: [.process("Shaders")]),
         .testTarget(name: "HmmCommandsTests", dependencies: ["HmmCommands"]),
@@ -49,7 +52,8 @@ let package = Package(
         .testTarget(name: "HmmPerceptionTests", dependencies: ["HmmPerception"]),
         .testTarget(name: "HmmMediaTests", dependencies: ["HmmMedia"]),
         .testTarget(name: "HmmDesignTests", dependencies: ["HmmDesign"]),
-        .testTarget(name: "HmmBrushTests", dependencies: ["HmmBrush"])
+        .testTarget(name: "HmmBrushTests", dependencies: ["HmmBrush"]),
+        .testTarget(name: "HmmBoardTests", dependencies: ["HmmBoard", "HmmBrush", "HmmCommands", "HmmDocuments"])
     ],
     swiftLanguageModes: [.v6]
 )
