@@ -272,8 +272,19 @@
             extras.append(HmmHoldMenu.Item("Send to the back", systemName: "square.3.layers.3d.bottom.filled") { [weak self] in
                 self?.sendSelectionToBack()
             })
-            let rename: (@MainActor () -> Void)? = item.frame == nil ? nil : { [weak self] in self?.renaming = id }
-            let paste: (@MainActor () -> Void)? = Self.clipboard == nil ? nil : { [weak self] in self?.paste(at: point) }
+            // A row a thing can't do stays in its place, dimmed: only frames have names, Paste needs a copy.
+            var rename: (@MainActor () -> Void)?
+            if item.frame != nil {
+                rename = { [weak self] in
+                    self?.renaming = id
+                }
+            }
+            var paste: (@MainActor () -> Void)?
+            if Self.clipboard != nil {
+                paste = { [weak self] in
+                    self?.paste(at: point)
+                }
+            }
             return HmmHoldMenu(duplicate: { [weak self] in self?.duplicateSelection() }, rename: rename,
                                copy: { [weak self] in self?.copySelection() }, paste: paste, extras: extras,
                                delete: { [weak self] in self?.deleteSelection() })
