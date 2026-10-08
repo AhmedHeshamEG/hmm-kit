@@ -25,7 +25,8 @@ let package = Package(
         .library(name: "HmmStore", targets: ["HmmStore"]),
         .library(name: "HmmBrush", targets: ["HmmBrush"]),
         .library(name: "HmmBoard", targets: ["HmmBoard"]),
-        .library(name: "HmmBrushRender", targets: ["HmmBrushRender"])
+        .library(name: "HmmBrushRender", targets: ["HmmBrushRender"]),
+        .library(name: "HmmBoardUI", targets: ["HmmBoardUI"])
     ],
     targets: [
         .target(name: "HmmDesign"),
@@ -44,6 +45,8 @@ let package = Package(
         .target(name: "HmmBoard", dependencies: ["HmmBrush", "HmmCommands", "HmmDocuments"]),
         // The brush engine on the GPU (Metal): the stamp shader, the stamper, tip and grain textures.
         .target(name: "HmmBrushRender", dependencies: ["HmmBrush"], resources: [.process("Shaders")]),
+        // The board on screen: its Metal renderer, the canvas view, the SwiftUI screen.
+        .target(name: "HmmBoardUI", dependencies: ["HmmBoard", "HmmBrush", "HmmBrushRender", "HmmCommands", "HmmDesign", "HmmDocuments"]),
         .testTarget(name: "HmmCommandsTests", dependencies: ["HmmCommands"]),
         .testTarget(name: "HmmDocumentsTests", dependencies: ["HmmDocuments", "HmmCommands"]),
         .testTarget(name: "HmmTranscriptTests", dependencies: ["HmmTranscript"]),
@@ -53,7 +56,8 @@ let package = Package(
         .testTarget(name: "HmmMediaTests", dependencies: ["HmmMedia"]),
         .testTarget(name: "HmmDesignTests", dependencies: ["HmmDesign"]),
         .testTarget(name: "HmmBrushTests", dependencies: ["HmmBrush"]),
-        .testTarget(name: "HmmBoardTests", dependencies: ["HmmBoard", "HmmBrush", "HmmCommands", "HmmDocuments"])
+        .testTarget(name: "HmmBoardTests", dependencies: ["HmmBoard", "HmmBrush", "HmmCommands", "HmmDocuments"]),
+        .testTarget(name: "HmmBoardUITests", dependencies: ["HmmBoardUI", "HmmBoard", "HmmBrush", "HmmBrushRender"])
     ],
     swiftLanguageModes: [.v6]
 )
