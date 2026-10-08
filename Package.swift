@@ -22,7 +22,9 @@ let package = Package(
         .library(name: "HmmBridge", targets: ["HmmBridge"]),
         .library(name: "HmmPerception", targets: ["HmmPerception"]),
         .library(name: "HmmDiagnostics", targets: ["HmmDiagnostics"]),
-        .library(name: "HmmStore", targets: ["HmmStore"])
+        .library(name: "HmmStore", targets: ["HmmStore"]),
+        .library(name: "HmmBrush", targets: ["HmmBrush"]),
+        .library(name: "HmmBrushRender", targets: ["HmmBrushRender"])
     ],
     targets: [
         .target(name: "HmmDesign"),
@@ -35,6 +37,10 @@ let package = Package(
         .target(name: "HmmPerception", dependencies: ["HmmMedia"]),
         .target(name: "HmmDiagnostics", dependencies: ["HmmDesign"]),
         .target(name: "HmmStore"),
+        // The brush engine's arithmetic: brushes, strokes into stamps, the built-in tips and grains.
+        .target(name: "HmmBrush", dependencies: ["HmmDocuments"]),
+        // The brush engine on the GPU (Metal): the stamp shader, the stamper, tip and grain textures.
+        .target(name: "HmmBrushRender", dependencies: ["HmmBrush"], resources: [.process("Shaders")]),
         .testTarget(name: "HmmCommandsTests", dependencies: ["HmmCommands"]),
         .testTarget(name: "HmmDocumentsTests", dependencies: ["HmmDocuments", "HmmCommands"]),
         .testTarget(name: "HmmTranscriptTests", dependencies: ["HmmTranscript"]),
@@ -42,7 +48,8 @@ let package = Package(
         .testTarget(name: "HmmDiagnosticsTests", dependencies: ["HmmDiagnostics"]),
         .testTarget(name: "HmmPerceptionTests", dependencies: ["HmmPerception"]),
         .testTarget(name: "HmmMediaTests", dependencies: ["HmmMedia"]),
-        .testTarget(name: "HmmDesignTests", dependencies: ["HmmDesign"])
+        .testTarget(name: "HmmDesignTests", dependencies: ["HmmDesign"]),
+        .testTarget(name: "HmmBrushTests", dependencies: ["HmmBrush"])
     ],
     swiftLanguageModes: [.v6]
 )
