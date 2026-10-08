@@ -133,7 +133,7 @@
             let kept = second.color(100, 60), live = second.color(100, 75)
             XCTAssertGreaterThan(kept.2, kept.0 + 80, "the new stroke \(kept)")
             XCTAssertGreaterThan(live.2, live.0 + 80, "the stroke being drawn \(live)")
-            try check(second, scale: 1)
+            check(second, scale: 1)
 
             // Panned while fingers move: the same layer, shifted.
             scene.changes = BoardChanges()
