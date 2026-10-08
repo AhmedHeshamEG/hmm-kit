@@ -100,6 +100,8 @@
         func testAFrameOnScreenIsTheLayerPlusWhatMoves() throws {
             let renderer = try BoardRenderer()
             var session = try plannedBoard()
+            // What made the board has been drawn by the first frame; from here on only new changes count.
+            _ = session.takeChanges()
             let descriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: BoardRenderer.format, width: 200, height: 250, mipmapped: false)
             descriptor.usage = [.renderTarget, .shaderRead]
             descriptor.storageMode = .shared

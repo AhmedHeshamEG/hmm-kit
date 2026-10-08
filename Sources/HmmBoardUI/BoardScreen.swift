@@ -116,7 +116,7 @@
         private var toolItems: [HmmClusterItem] {
             let tools: [(BoardTool, String, String)] = [
                 (.draw, "pencil.tip", "Draw"), (.erase, "eraser", "Erase"), (.note, "note.text", "Note"), (.arrow, "arrow.up.right", "Arrow"),
-                (.frame, "rectangle.dashed", "Frame")
+                (.frame, "rectangle.dashed", "Draw a frame")
             ]
             return tools.map { tool, symbol, label in
                 HmmClusterItem(id: "board-\(tool.rawValue)", systemName: symbol, label: label, isOn: model.session.tool == tool) {
@@ -228,7 +228,8 @@
 
         private func show(_ text: String?) {
             guard let text else { return }
-            toast = HmmToastMessage(text, kind: .error)
+            // The model speaks English; the app's String Catalog says it in the person's language.
+            toast = HmmToastMessage(NSLocalizedString(text, comment: ""), kind: .error)
             model.message = nil
         }
 

@@ -84,8 +84,8 @@
                         Text("Plain").tag(BoardPaper.Pattern.plain)
                     }
                     Picker("Paper colour", selection: dark) {
-                        Text("Dark").tag(true)
-                        Text("Light").tag(false)
+                        Text("Dark paper").tag(true)
+                        Text("Light paper").tag(false)
                     }
                 } label: {
                     Label("Paper", systemImage: "square.grid.3x3")
