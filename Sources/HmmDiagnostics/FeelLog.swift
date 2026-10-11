@@ -76,6 +76,11 @@ public struct FeelLog: Sendable {
 
     public var pendingCount: Int { pending.count }
 
+    public mutating func describeWindow(width: Double, height: Double) {
+        recording.width = width
+        recording.height = height
+    }
+
     public mutating func deliver(_ delivery: Delivery) {
         guard recording.touches.count + pending.count < Self.touchLimit else { return }
         pending.append(Pending(delivery: delivery))

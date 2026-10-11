@@ -79,6 +79,9 @@
 
         private func install() {
             let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap(\.windows)
+            if let window = windows.first(where: \.isKeyWindow) ?? windows.first {
+                log.describeWindow(width: Double(window.bounds.width), height: Double(window.bounds.height))
+            }
             for window in windows {
                 let watcher = FeelTouchWatcher { [weak self] touches, phase in self?.received(touches, phase: phase) }
                 window.addGestureRecognizer(watcher)

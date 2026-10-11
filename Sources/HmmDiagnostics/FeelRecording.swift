@@ -72,6 +72,9 @@ public struct FeelRecording: Codable, Sendable, Equatable {
     public var seconds: Double = 0
     /// The screen's refresh rate while recording (Hz).
     public var refreshRate: Double = 60
+    /// The window's size in points, so a touch's place can be told (a corner cluster, the sidebar, the stage).
+    public var width: Double = 0
+    public var height: Double = 0
     /// The last cold launch: process start to the first screen (nil when the app didn't measure it).
     public var launch: Double?
     public var touches: [Touch] = []
