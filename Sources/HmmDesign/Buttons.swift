@@ -89,10 +89,15 @@
             } label: {
                 HStack(spacing: HmmSpacing.xs) {
                     if let systemName { Image(systemName: systemName).symbolRenderingMode(.hierarchical) }
-                    Text(LocalizedStringKey(title)).lineLimit(1)
+                    // A label is never cut: a long one takes a second line.
+                    Text(LocalizedStringKey(title))
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .font(.hmm(.body, weight: .semibold))
                 .padding(.horizontal, HmmSpacing.m)
+                .padding(.vertical, HmmSpacing.xxs)
                 .frame(minHeight: HmmTarget.minimum)
                 .foregroundStyle(prominent ? theme.onAccent : (role == .destructive ? theme.danger : theme.text))
                 .background(Capsule().fill(prominent ? theme.accent : theme.surface2.opacity(0.9)))
