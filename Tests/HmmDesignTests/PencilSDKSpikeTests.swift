@@ -47,7 +47,10 @@
         func testSwiftUIHearsTheSqueezeWithItsHoverPose() {
             let view = Color.clear
                 .onPencilSqueeze { phase in
-                    if case let .ended(value) = phase { _ = value.hoverPose?.anchor }
+                    if case let .ended(value) = phase {
+                        _ = value.hoverPose?.anchor
+                        _ = value.hoverPose?.location
+                    }
                 }
                 .onPencilDoubleTap { value in _ = value.hoverPose?.anchor }
             let host = UIHostingController(rootView: view)
