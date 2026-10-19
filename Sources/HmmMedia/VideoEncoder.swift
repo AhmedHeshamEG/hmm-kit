@@ -126,11 +126,13 @@
         }
 
         /// BT.2020 colour, HLG light, the BT.2020 matrix: what an HDR file says it holds.
-        static let hdrColor: [String: Any] = [
-            AVVideoColorPrimariesKey: AVVideoColorPrimaries_ITU_R_2020,
-            AVVideoTransferFunctionKey: AVVideoTransferFunction_ITU_R_2100_HLG,
-            AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_2020
-        ]
+        static var hdrColor: [String: Any] {
+            [
+                AVVideoColorPrimariesKey: AVVideoColorPrimaries_ITU_R_2020,
+                AVVideoTransferFunctionKey: AVVideoTransferFunction_ITU_R_2100_HLG,
+                AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_2020
+            ]
+        }
 
         /// A pixel buffer from the encoder's pool (IOSurface-backed, Metal-compatible), to render the next frame into.
         /// An HDR encoder's buffers are tagged with their colour, so the encoder converts nothing.
