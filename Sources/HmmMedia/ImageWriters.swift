@@ -55,11 +55,12 @@
                         kIIOCameraExtrinsics_Rotation as String: [1.0, 0, 0, 0, 1, 0, 0, 0, 1]
                     ]
                 ]
+                let eye: CFString = isLeft ? kCGImagePropertyGroupImageIsLeftImage : kCGImagePropertyGroupImageIsRightImage
                 let properties: [String: Any] = [
                     kCGImagePropertyGroups as String: [
                         kCGImagePropertyGroupIndex as String: 0,
                         kCGImagePropertyGroupType as String: kCGImagePropertyGroupTypeStereoPair,
-                        isLeft ? kCGImagePropertyGroupImageIsLeftImage : kCGImagePropertyGroupImageIsRightImage as String: true,
+                        eye as String: true,
                         kCGImagePropertyGroupImageDisparityAdjustment as String: Int((min(max(disparityAdjustment, -1), 1) * 10000).rounded())
                     ],
                     kCGImagePropertyHEIFDictionary as String: camera,
