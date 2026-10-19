@@ -140,6 +140,17 @@ final class PackManifestTests: XCTestCase {
         XCTAssertTrue(HmmPackManifest.isSafe("items/a b.json"))
     }
 
+    func testAnItemFromSomeoneElseKeepsItsAuthor() {
+        let own = HmmPackManifest.Item(kind: "brush", id: "a", name: "Mine", file: "items/a.json")
+        let passedOn = HmmPackManifest.Item(kind: "brush", id: "b", name: "Hers", file: "items/b.json", author: "Sara", licence: .personal)
+        let pack = manifest([own, passedOn])
+        XCTAssertEqual(pack.origin(of: own).author, "Lina")
+        XCTAssertEqual(pack.origin(of: own).licence, .credit)
+        XCTAssertEqual(pack.origin(of: passedOn).author, "Sara")
+        XCTAssertEqual(pack.origin(of: passedOn).licence, .personal)
+        XCTAssertEqual(pack.origin(of: passedOn).pack, "Autumn")
+    }
+
     func testLicencesInWords() throws {
         XCTAssertEqual(HmmLicence.anything.sentence(author: ""), "Made by the author. Use it in anything you make, commercial work included.")
         XCTAssertEqual(HmmLicence.own("  Ask me first. ").sentence(author: "Sara"), "Made by Sara. Ask me first.")

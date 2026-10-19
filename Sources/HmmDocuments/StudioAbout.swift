@@ -2,20 +2,18 @@
     import HmmDesign
     import SwiftUI
 
-    /// A Studio's About page: the thing's name, who made it and what others may do with it when it's shared as a pack.
-    /// A thing that came in a pack shows where from, in one line.
+    /// A Studio's About page: the thing's name and, when it came in a pack, who made it and what others may do with it.
     public struct HmmStudioAbout: View {
         @Binding private var name: String
-        @Binding private var author: String
-        @Binding private var licence: HmmLicence
         private let origin: HmmPackOrigin?
+        private let note: String?
         @Environment(\.hmmTheme) private var theme
 
-        public init(name: Binding<String>, author: Binding<String>, licence: Binding<HmmLicence>, origin: HmmPackOrigin? = nil) {
+        /// `note`: one line of the app's own about the kind of thing (how it's made, what it keeps).
+        public init(name: Binding<String>, origin: HmmPackOrigin? = nil, note: String? = nil) {
             _name = name
-            _author = author
-            _licence = licence
             self.origin = origin
+            self.note = note
         }
 
         public var body: some View {
@@ -23,18 +21,56 @@
                 TextField("Name", text: $name)
                     .textFieldStyle(.roundedBorder)
                     .accessibilityIdentifier("studio-name")
-                TextField("Author", text: $author)
+                if let origin {
+                    VStack(alignment: .leading, spacing: HmmSpacing.xxs) {
+                        Text("From “\(origin.pack)” by \(origin.author)")
+                            .font(.hmm(.footnote, weight: .semibold))
+                            .foregroundStyle(theme.text)
+                        Text(verbatim: origin.licence.sentence(author: origin.author))
+                            .font(.hmm(.footnote))
+                            .foregroundStyle(theme.text2)
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("studio-origin")
+                }
+                if let note {
+                    Text(LocalizedStringKey(note)).font(.hmm(.footnote)).foregroundStyle(theme.text2)
+                }
+            }
+        }
+    }
+
+    /// Sharing things as a pack: its name, who made it and what others may do with it. The author and licence are
+    /// remembered by the app for next time; things from someone else's pack keep theirs whatever is chosen here.
+    public struct HmmPackForm: View {
+        @Binding private var name: String
+        @Binding private var author: String
+        @Binding private var licence: HmmLicence
+        private let count: Int
+        @Environment(\.hmmTheme) private var theme
+
+        public init(name: Binding<String>, author: Binding<String>, licence: Binding<HmmLicence>, count: Int) {
+            _name = name
+            _author = author
+            _licence = licence
+            self.count = count
+        }
+
+        public var body: some View {
+            VStack(alignment: .leading, spacing: HmmSpacing.s) {
+                TextField("Pack name", text: $name)
                     .textFieldStyle(.roundedBorder)
-                    .accessibilityIdentifier("studio-author")
+                    .accessibilityIdentifier("pack-name")
+                TextField("Your name", text: $author)
+                    .textFieldStyle(.roundedBorder)
+                    .accessibilityIdentifier("pack-author")
                 HmmLicencePicker(licence: $licence)
                 Text(verbatim: licence.sentence(author: author))
                     .font(.hmm(.footnote))
                     .foregroundStyle(theme.text2)
-                if let origin {
-                    Text("From “\(origin.pack)” by \(origin.author)")
-                        .font(.hmm(.footnote, weight: .semibold))
-                        .foregroundStyle(theme.text2)
-                }
+                Text("^[\(count) thing](inflect: true) in this pack. Packs hold only what you made: no code, nothing that runs.")
+                    .font(.hmm(.footnote))
+                    .foregroundStyle(theme.text3)
             }
         }
     }
@@ -55,7 +91,7 @@
                     }
                 }
                 .pickerStyle(.menu)
-                .accessibilityIdentifier("studio-licence")
+                .accessibilityIdentifier("pack-licence")
                 if case let .own(text) = licence {
                     TextField("In your own words", text: Binding(get: { text }, set: { licence = .own($0) }), axis: .vertical)
                         .textFieldStyle(.roundedBorder)

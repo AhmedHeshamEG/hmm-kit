@@ -99,21 +99,32 @@ public struct HmmPackManifest: Codable, Hashable, Sendable {
     public static let maximumItems = 2000
 
     /// One thing in the pack: its kind (the app's word: `brush`, `look`, `material`…), its id when it was made, its
-    /// name, the JSON file that holds it and the other files it needs (pictures), all relative to the pack's root.
+    /// name, the JSON file that holds it and the other files it needs (pictures), all relative to the pack's root. A
+    /// thing that came from someone else's pack keeps its own author and licence, so sharing it on never loses them.
     public struct Item: Codable, Hashable, Sendable {
         public var kind: String
         public var id: String
         public var name: String
         public var file: String
         public var files: [String]
+        public var author: String?
+        public var licence: HmmLicence?
 
-        public init(kind: String, id: String, name: String, file: String, files: [String] = []) {
+        public init(kind: String, id: String, name: String, file: String, files: [String] = [], author: String? = nil,
+                    licence: HmmLicence? = nil) {
             self.kind = kind
             self.id = id
             self.name = name
             self.file = file
             self.files = files
+            self.author = author
+            self.licence = licence
         }
+    }
+
+    /// Where an item came from once it's imported: its own author and licence, else the pack's.
+    public func origin(of item: Item, imported: Date = Date()) -> HmmPackOrigin {
+        HmmPackOrigin(author: item.author ?? author, licence: item.licence ?? licence, pack: name, imported: imported)
     }
 
     public var format: Int
