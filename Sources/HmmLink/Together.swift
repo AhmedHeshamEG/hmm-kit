@@ -52,7 +52,7 @@
 
         /// Offers `activity` to the people on the FaceTime call (the system asks the person first). True when it
         /// started.
-        public static func start(_ activity: Activity) async throws -> Bool {
+        public nonisolated static func start(_ activity: Activity) async throws -> Bool {
             switch await activity.prepareForActivation() {
             case .activationPreferred: try await activity.activate()
             default: false
