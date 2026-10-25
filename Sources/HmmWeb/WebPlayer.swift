@@ -148,10 +148,21 @@
             guard let webView else { return nil }
             let configuration = WKSnapshotConfiguration()
             configuration.afterScreenUpdates = true
-            let screen = webView.window?.screen.scale ?? webView.traitCollection.displayScale
+            let screen = max(webView.window?.screen.scale ?? webView.traitCollection.displayScale, 1)
             configuration.snapshotWidth = NSNumber(value: Double(CGFloat(piece.width) * scale / screen))
-            let image = try? await webView.takeSnapshot(configuration: configuration)
-            return image?.cgImage
+            guard let image = try? await webView.takeSnapshot(configuration: configuration).cgImage else { return nil }
+            return Self.sized(image, width: Int((CGFloat(piece.width) * scale).rounded()), height: Int((CGFloat(piece.height) * scale).rounded()))
+        }
+
+        /// The picture at exactly the size asked for (WebKit's own scale can differ a view without a screen).
+        static func sized(_ image: CGImage, width: Int, height: Int) -> CGImage? {
+            if image.width == width, image.height == height { return image }
+            let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+                                    space: CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB(),
+                                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+            context?.interpolationQuality = .high
+            context?.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return context?.makeImage()
         }
 
         private func collectErrors() async {
