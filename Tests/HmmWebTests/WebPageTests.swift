@@ -21,6 +21,8 @@ final class WebPageTests: XCTestCase {
         let bare = HmmWebPage.prepare("<html><head><title>x</title></head><body></body></html>")
         XCTAssertTrue(bare.contains("Content-Security-Policy"))
         XCTAssertTrue(bare.contains("type=\"importmap\""))
+        XCTAssertTrue(bare.contains("name=\"viewport\""), "laid out at its own size")
+        XCTAssertEqual(HmmWebPage.prepare("<head><meta name=\"viewport\" content=\"width=500\"></head>").components(separatedBy: "viewport").count, 2)
         let map = try XCTUnwrap(bare.range(of: "importmap")), title = try XCTUnwrap(bare.range(of: "<title>"))
         XCTAssertLessThan(map.lowerBound, title.lowerBound, "first in the head")
 
@@ -38,6 +40,7 @@ final class WebPageTests: XCTestCase {
         XCTAssertTrue(host.contains("const data = {\"v\":\"5.7.0\"};"))
         XCTAssertTrue(host.contains("__hmm.onFrame"))
         XCTAssertTrue(host.contains("autoplay: false"))
+        XCTAssertTrue(host.contains("name=\"viewport\""))
     }
 
     func testFramesAreSixtyASecond() {

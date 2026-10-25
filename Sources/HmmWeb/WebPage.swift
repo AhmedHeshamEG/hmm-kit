@@ -75,12 +75,18 @@ public enum HmmWebPage {
     public static func prepare(_ html: String) -> String {
         var page = rewriteLibraries(html)
         var head = "<meta http-equiv=\"Content-Security-Policy\" content=\"\(contentPolicy)\">"
+        // Without one, WebKit lays a page out 980 px wide and shrinks it to fit: the piece's size is its CSS size.
+        if page.range(of: "name=[\"']?viewport", options: [.regularExpression, .caseInsensitive]) == nil {
+            head += "<meta name=\"viewport\" content=\"\(viewport)\">"
+        }
         if page.range(of: "type=\"importmap\"", options: .caseInsensitive) == nil,
            page.range(of: "type='importmap'", options: .caseInsensitive) == nil {
             head += "<script type=\"importmap\">\(importMap)</script>"
         }
         return insertInHead(head, into: page, rewritten: &page)
     }
+
+    public static let viewport = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 
     /// `three` and its addons by their bare names, as three.js's own examples import them.
     public static var importMap: String {
@@ -90,7 +96,8 @@ public enum HmmWebPage {
     /// A page that plays a Lottie file: lottie-web draws it as SVG, and the clock turns it to each frame.
     public static func lottieHost(json: String) -> String {
         """
-        <!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;\
+        <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="\(viewport)">
+        <meta http-equiv="Content-Security-Policy" content="\(contentPolicy)"><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;\
         background:transparent}#a{width:100%;height:100%}</style><script src="\(lottie)"></script></head>
         <body><div id="a"></div><script>
         const data = \(json);
