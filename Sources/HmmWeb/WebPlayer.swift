@@ -111,9 +111,10 @@
         }
 
         /// WebKit only paints a view that is in a window, so the page lives in a window of its own, off the screen's edge.
+        /// Without a scene (tests, a background export) the view stands alone.
         private func host(_ view: WKWebView) {
-            let scene = Self.windowScene?()
-            let window = scene.map { UIWindow(windowScene: $0) } ?? UIWindow(frame: .zero)
+            guard let scene = Self.windowScene?() else { return }
+            let window = UIWindow(windowScene: scene)
             window.frame = CGRect(x: -CGFloat(piece.width) - 64, y: 0, width: CGFloat(piece.width), height: CGFloat(piece.height))
             window.windowLevel = UIWindow.Level(rawValue: -1000)
             window.isUserInteractionEnabled = false
@@ -147,7 +148,7 @@
             guard let webView else { return nil }
             let configuration = WKSnapshotConfiguration()
             configuration.afterScreenUpdates = true
-            let screen = webView.window?.screen.scale ?? 2
+            let screen = webView.window?.screen.scale ?? webView.traitCollection.displayScale
             configuration.snapshotWidth = NSNumber(value: Double(CGFloat(piece.width) * scale / screen))
             let image = try? await webView.takeSnapshot(configuration: configuration)
             return image?.cgImage
