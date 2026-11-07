@@ -1,6 +1,6 @@
 # hmm-kit
 
-The shared foundation of the **hmm.** studio apps (3D-lowey, Retake, Editoro): one design language, one undo
+The shared foundation of the **hmm.** studio apps (Maquette, Retake): one design language, one undo
 system, one document format, one transcript model, one LAN bridge to Claude, and one set of diagnostics.
 
 Each app pulls hmm-kit in with `git subtree` at `Packages/HmmKit` (so CI needs no extra credentials) and never edits
